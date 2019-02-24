@@ -78,7 +78,17 @@ $('#form').bootstrapValidator({
       }
     }
   })
+ })
+// 3 表单重置
+    // reset 按钮本身就可以重置内容,所以只需要重置状态即可
+    // resetForm(false);  只重置状态
+    // resetForm(true);   重置内容和状态
+    $('[type="reset"]').click(function() {
+      // 重置状态即可
+      $('#form').data('bootstrapValidator').resetForm();
+    })
 
 
-})
+
+
 });
