@@ -1,37 +1,34 @@
-$(function() {
-  /*
+$(function(){
+   /*
    * 1. 进行表单校验配置
    *    校验要求:
    *        (1) 用户名不能为空, 长度为2-6位
    *        (2) 密码不能为空, 长度为6-12位
    * */
-
-  // 进行表单校验初始化
-  $('#form').bootstrapValidator({
-    // 配置图标
+  //使用表单校验插件
+$('#form').bootstrapValidator({
+    //2. 指定校验时的图标显示，默认是bootstrap风格
     feedbackIcons: {
       valid: 'glyphicon glyphicon-ok',
       invalid: 'glyphicon glyphicon-remove',
       validating: 'glyphicon glyphicon-refresh'
     },
-
-    // 字段列表  field,  要先在 input 中配置 name 属性
+  
+    //3. 指定校验字段
     fields: {
-      // 用户名
+      //校验用户名，对应name表单的name属性
       username: {
-        // 校验规则
         validators: {
-          // 非空
+          //不能为空
           notEmpty: {
-            // 提示信息
             message: '用户名不能为空'
           },
-          // 长度校验
+          //长度校验
           stringLength: {
             min: 2,
             max: 6,
             message: '用户名长度为2-6位'
-          }
+          },
         }
       },
       // 密码
@@ -49,8 +46,7 @@ $(function() {
         }
       }
     }
-  })
-
+  }); 
 
   /* 
     2. 使用 submit 按钮, 会进行表单提交, 此时表单校验插件会立刻进行校验
@@ -59,34 +55,30 @@ $(function() {
 
       注册表单校验成功事件, 在事件中阻止默认的提交, 通过ajax提交
   */
-  $('#form').on('success.form.bv', function( e ) {
-    // 阻止默认的提交
-    e.preventDefault();
 
-    // console.log('当前默认的表单提交已经被阻止, 我们通过ajax提交');
-
-    $.ajax({
-      type: 'post',
-      // 本质上会自动拼接上前面的域名端口  http://localhost:3000/employee/employeeLogin
-      url: '/employee/employeeLogin', 
-      // 表单序列化, 自动将所有配置了 name 属性的 input 值进行拼接, 用于提交  
-      data: $('#form').serialize(),
-      dataType: 'json',
-      success: function( info ) {
-        console.log( info );
-
-        if (info.error === 1000) {
-          alert('用户名不存在');
-        }
-        if (info.error === 1001) {
-          alert('密码错误');
-        }
-        if (info.success) {
-          // 登录成功, 跳转首页
-          location.href = 'index.html';
-        }
+ $("#form").on('success.form.bv', function (e) {
+  e.preventDefault();
+  // 当前默认表单提交已经被阻止,我们将使用ajax提交逻辑
+  $.ajax({
+    type:'post',
+    url:'/employee/employeeLogin',
+    data:$('#form').serialize(),
+    dataType:'json',
+    success:function(res){
+      console.log(res);
+      if (res.error ===1000) {
+        alert('用户名不存在');
       }
-    })
-
+      if (res.error === 1001) {
+        alert('密码错误');
+      }
+      if (res.success) {
+        //登录成功
+        location.href = 'index.html';
+      }
+    }
   })
+
+
+})
 });
